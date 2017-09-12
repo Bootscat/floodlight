@@ -67,6 +67,7 @@ import net.floodlightcontroller.storage.StorageException;
 import net.floodlightcontroller.threadpool.IThreadPoolService;
 import net.floodlightcontroller.util.LoadMonitor;
 
+import org.json.JSONException;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
@@ -405,8 +406,26 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                     pktinProcTimeService.recordStartTimePktIn();
                     Command cmd;
                     for (IOFMessageListener listener : listeners) {
+                    	boolean needToBeDetected = false;
+                    	if(m.getType().name().equals("PACKET_IN")) {
+                    		switch (listener.getClass().getName()) {
+                    			case "net.floodlightcontroller.myapp.MyApp":
+                    				TransactionClassifier.handlePacketIn(sw, m);
+                    				needToBeDetected = true;
+                    				break;
+                    		}
+                    	}
+                    	
                         pktinProcTimeService.recordStartTimeComp(listener);
                         cmd = listener.receive(sw, m, bc);
+                        if (needToBeDetected) {
+                        	try {
+								needToBeDetected = TransactionClassifier.handleTransaction();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                        }
                         pktinProcTimeService.recordEndTimeComp(listener);
 
                         if (Command.STOP.equals(cmd)) {
