@@ -214,95 +214,24 @@ public class TransactionClassifier {
 
 	// return value: false if there is not a flowMod
 	public static boolean handleTransaction() throws JSONException {
-		if (start == false) {
+		if (!start) {
 			return false;
 		}
 		Long tid = Thread.currentThread().getId();
 		ArrayList<Entry<IOFSwitch, OFMessage>> list = flowMod.get(tid);
 
 		if(list == null) {
-//			installTransaction(tid);
 			packetIn.remove(tid);
 			packetOut.remove(tid);
 			flowMod.remove(tid);
 			return false;
 		} else {
+			AnomalyDetector.handleTransaction(list, topology);
 			packetIn.remove(tid);
 			packetOut.remove(tid);
 			flowMod.remove(tid);
 			return true;
 		}
-
-//		HashMap<String, DiGraph> fmClass = new HashMap<String, DiGraph>();
-
-//		for(Entry<IOFSwitch, OFMessage> entry : list) {
-//			OFFlowMod fm = (OFFlowMod) entry.getValue(); // value is OFMessage originally
-//			IOFSwitch sw = entry.getKey();
-//			JSONObject matchObj =  new JSONObject();
-//			String in_port = null;
-//			try {
-//				for(MatchField<?> field : fm.getMatch().getMatchFields()) {
-//					if(field.getName().equals("in_port")) {
-//						in_port = fm.getMatch().get(field).toString();
-//						continue;
-//					}
-//					matchObj.put(field.getName(), fm.getMatch().get(field).toString());
-//				}
-//			} catch (JSONException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//			DiGraph graph = fmClass.get(matchObj.toString());
-//			if(graph == null){
-//				graph = new DiGraph();
-//				fmClass.put(matchObj.toString(), graph);
-//			}
-//
-//			String target = sw.getId().toString();
-//			String[] outputs = fm.getOutPort().toString().split(",");
-//			if(in_port != null) {
-//				Entry<String, String> in_start = new SimpleEntry<String, String>(target, in_port);
-//				for(String port : outputs) {
-//					Entry<String, String> in_end = new SimpleEntry<String, String>(target, port);
-//					graph.addEdge(in_start, in_end);
-//					JSONArray tuple = (JSONArray) ((JSONObject) topology.get(target)).get(port);
-//					Entry<String, String> out_end = new SimpleEntry<String, String>(tuple.get(0).toString(), tuple.get(1).toString());
-//					graph.addEdge(in_end, out_end);
-//				}
-//			} else {
-//				Entry<String, String> in_start = new SimpleEntry<String, String>(target, "");
-//				for(String port : outputs) {
-//					Entry<String, String> in_end = new SimpleEntry<String, String>(target, port);
-//					graph.addEdge(in_start, in_end);
-//					JSONArray tuple = (JSONArray) ((JSONObject) topology.get(target)).get(port);
-//					String out_switch = tuple.get(0).toString();
-//					if(out_switch != null) {
-//						Entry<String, String> out_end = new SimpleEntry<String, String>(out_switch, "");
-//						graph.addEdge(in_end, out_end);
-//					}
-//				}
-//			}
-//		}
-//		boolean flag = false;
-//		for(String match : fmClass.keySet()) {
-//			DiGraph graph = fmClass.get(match);
-//			JSONObject matchObj = new JSONObject(match);
-//			flag = verify(matchObj, graph);
-//			if(!flag) {
-//				log.info("Transaction error");
-//				break;
-//			}
-//		}
-//
-//		if(flag) {
-//			installTransaction(tid);
-//		}
-////		log.info(String.valueOf(list.size()) + " " + String.valueOf(System.nanoTime() - startStamp));
-//		packetIn.remove(tid);
-//		packetOut.remove(tid);
-//		flowMod.remove(tid);
-//		return true;
 	}
 
 	public static void installTransaction(Long tid) {
@@ -320,16 +249,6 @@ public class TransactionClassifier {
 			OFMessage m = tmp.getValue();
 			sw.write(m);
 		}
-	}
-
-	public static boolean verify(JSONObject match, DiGraph graph) throws JSONException {
-
-		for(Entry<String, String> node : graph.getNodes()) {
-			if(!graph.dfs(match, node, log)){
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public static void recordTime(long front, long end) {
