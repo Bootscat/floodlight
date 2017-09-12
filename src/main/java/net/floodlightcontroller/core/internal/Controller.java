@@ -87,10 +87,10 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     /* OpenFlow message listeners and dispatchers */
     protected static ConcurrentMap<OFType, ListenerDispatcher<OFType,IOFMessageListener>> messageListeners;
     protected static ConcurrentLinkedQueue<IControllerCompletionListener> completionListeners;
-    
-    /* 
+
+    /*
      * The controllerNodeIPsCache maps Controller IDs to their IP address.
-     * It's only used by handleControllerNodeIPsChanged 
+     * It's only used by handleControllerNodeIPsChanged
      */
     protected static HashMap<String, String> controllerNodeIPsCache;
 
@@ -98,7 +98,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     protected static Map<String, List<IInfoProvider>> providerMap;
     protected static BlockingQueue<IUpdate> updates;
     protected static ControllerCounters counters;
-    
+
     /* Module Loader State */
     private static ModuleLoaderState moduleLoaderState;
     public enum ModuleLoaderState {
@@ -128,7 +128,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     protected volatile HARole notifiedRole;
 
     private static final String INITIAL_ROLE_CHANGE_DESCRIPTION = "Controller startup.";
-    
+
     /*
      * NOTE: roleManager is not 'final' because it's initialized at run time
      * based on parameters that are only available in init()
@@ -160,7 +160,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
             FLOW_COLUMN_ACCESS_PRIORITY,
             FLOW_COLUMN_CORE_PRIORITY
     };
-    
+
     protected static boolean alwaysDecodeEth = true;
 
     @Override
@@ -171,7 +171,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     // Load monitor for overload protection
     protected final boolean overload_drop = Boolean.parseBoolean(System.getProperty("overload_drop", "false"));
     protected final LoadMonitor loadmonitor = new LoadMonitor(log);
-                
+
     /**
      *  Updates handled by the main loop
      */
@@ -181,7 +181,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
          */
         public void dispatch();
     }
-        
+
     /**
      * Update message indicating
      * IPs of controllers in controller cluster have changed.
@@ -227,15 +227,15 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     IStorageSourceService getStorageSourceService() {
         return storageSourceService;
     }
-    
+
     IShutdownService getShutdownService() {
     	return shutdownService;
     }
-    
+
     void setShutdownService(IShutdownService shutdownService) {
     	Controller.shutdownService = shutdownService;
     }
-    
+
     void setDebugCounter(IDebugCounterService debugCounters) {
         debugCounterService = debugCounters;
     }
@@ -250,12 +250,12 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     void setPktInProcessingService(IPktInProcessingTimeService pits) {
         Controller.pktinProcTimeService = pits;
     }
-    
+
     void setRestApiService(IRestApiService restApi) {
         Controller.restApiService = restApi;
     }
 
-    
+
     void setThreadPoolService(IThreadPoolService tp) {
         threadPoolService = tp;
     }
@@ -263,7 +263,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         return threadPoolService;
     }
 
-    
+
     public void setSwitchService(IOFSwitchService switchService) {
        Controller.switchService = switchService;
     }
@@ -289,7 +289,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     // ****************
     // Message handlers
     // ****************
-    
+
     // Handler for SwitchPortsChanged was here (notifyPortChanged). Handled in OFSwitchManager
 
     /**
@@ -418,11 +418,11 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                 // is interested in knowing that we are exiting the loop
                 for (IControllerCompletionListener listener : completionListeners)
                 	listener.onMessageConsumed(sw, m, bc);
-                
+
                 if ((bContext == null) && (bc != null)) flcontext_free(bc);
         }
     }
-    
+
     // ***************
     // IFloodlightProvider
     // ***************
@@ -445,7 +445,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     public synchronized void addCompletionListener(IControllerCompletionListener listener) {
     	completionListeners.add(listener);
     }
-    
+
     @Override
     public synchronized void removeCompletionListener(IControllerCompletionListener listener) {
     	String listenerName = listener.getName();
@@ -456,7 +456,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
     	}
     	listenerName=null; // help gc
     }
-    
+
     @Override
     public synchronized void addOFMessageListener(OFType type, IOFMessageListener listener) {
         ListenerDispatcher<OFType, IOFMessageListener> ldd =
@@ -610,7 +610,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
             }
         }
     }
-    
+
     private void setConfigParams(Map<String, String> configParams) throws FloodlightModuleException {
         /**
          * Tulio Ribeiro
@@ -618,20 +618,20 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         String controllerId = configParams.get("controllerId");
         if (!Strings.isNullOrEmpty(controllerId)) {
             this.controllerId = controllerId;
-        }        
+        }
         log.info("ControllerId set to {}", this.controllerId);
-        
+
         String shutdown = configParams.get("shutdownOnTransitionToStandby");
         if (!Strings.isNullOrEmpty(shutdown)) {
             try {
                 shutdownOnTransitionToStandby = Boolean.parseBoolean(shutdown.trim());
             } catch (Exception e) {
-                log.error("Could not parse 'shutdownOnTransitionToStandby' of {}. Using default setting of {}", 
+                log.error("Could not parse 'shutdownOnTransitionToStandby' of {}. Using default setting of {}",
                         shutdown, shutdownOnTransitionToStandby);
             }
-        }        
+        }
         log.info("Shutdown when controller transitions to STANDBY HA role: {}", shutdownOnTransitionToStandby);
-        
+
         String decodeEth = configParams.get("deserializeEthPacketIns");
         if (!Strings.isNullOrEmpty(decodeEth)) {
         	try {
@@ -639,7 +639,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         	} catch (Exception e) {
         		log.error("Could not parse 'deserializeEthPacketIns' of {}. Using default setting of {}", decodeEth, alwaysDecodeEth);
         	}
-        }        
+        }
         if (alwaysDecodeEth) {
 	        log.warn("Controller will automatically deserialize all Ethernet packet-in messages. "
 	        		+ "Set 'deserializeEthPacketIns' to 'FALSE' if this feature is not "
@@ -658,14 +658,14 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         moduleLoaderState = ModuleLoaderState.INIT;
 
         // These data structures are initialized here because other
-        // module's startUp() might be called before ours        
+        // module's startUp() might be called before ours
         messageListeners = new ConcurrentHashMap<OFType, ListenerDispatcher<OFType, IOFMessageListener>>();
         haListeners = new ListenerDispatcher<HAListenerTypeMarker, IHAListener>();
         controllerNodeIPsCache = new HashMap<String, String>();
         updates = new LinkedBlockingQueue<IUpdate>();
         providerMap = new HashMap<String, List<IInfoProvider>>();
         completionListeners = new ConcurrentLinkedQueue<IControllerCompletionListener>();
-        
+
         setConfigParams(configParams);
 
         HARole initialRole = getInitialRole(configParams);
@@ -698,8 +698,8 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         storageSourceService.createTable(FLOW_PRIORITY_TABLE_NAME, null);
         storageSourceService.setTablePrimaryKeyName(FLOW_PRIORITY_TABLE_NAME, FLOW_COLUMN_PRIMARY_KEY);
         storageSourceService.addListener(FLOW_PRIORITY_TABLE_NAME, this);
-        readFlowPriorityConfigurationFromStorage(); // 
-        
+        readFlowPriorityConfigurationFromStorage(); //
+
         // Startup load monitoring
         if (overload_drop) {
             this.loadmonitor.startMonitoring(threadPoolService.getScheduledExecutor());
@@ -707,16 +707,16 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
 
         // Add our REST API
         restApiService.addRestletRoutable(new CoreWebRoutable());
-                
+
         try {
             syncService.registerStore(OFSwitchManager.SWITCH_SYNC_STORE_NAME, Scope.LOCAL);
         } catch (SyncException e) {
             throw new FloodlightModuleException("Error while setting up sync service", e);
         }
-        
+
         addInfoProvider("summary", this);
     }
-    
+
     private void readFlowPriorityConfigurationFromStorage() {
         try {
             Map<String, Object> row;
@@ -847,7 +847,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
             }
         }
     }
-    
+
     @Override
     public Map<String, String> getControllerNodeIPs() {
         // We return a copy of the mapping so we can guarantee that
@@ -859,7 +859,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         }
         return retval;
     }
-    
+
     private static final String FLOW_PRIORITY_CHANGED_AFTER_STARTUP =
             "Flow priority configuration has changed after " +
             "controller startup. Restart controller for new " +
@@ -896,7 +896,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         m.put("free", runtime.freeMemory());
         return m;
     }
-    
+
     @Override
     public Long getUptime() {
         RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
@@ -974,7 +974,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         else
             return Optional.of(ControllerId.of(nodeId));
     }
-    
+
     public ControllerCounters getCounters() {
         return counters;
     }
