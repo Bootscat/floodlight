@@ -17,6 +17,8 @@
 
 package net.floodlightcontroller.core.internal;
 
+import cead.TransactionClassifier;
+
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -675,6 +677,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         roleManager = new RoleManager(this, shutdownService,
                                            notifiedRole,
                                            INITIAL_ROLE_CHANGE_DESCRIPTION);
+        TransactionClassifier.init();
         // Switch Service Startup
         switchService.registerLogicalOFMessageCategory(LogicalOFMessageCategory.MAIN);
         counters = new ControllerCounters(debugCounterService);
