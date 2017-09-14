@@ -1,7 +1,7 @@
 Floodlight With Anomaly Detector
 ====================================
 
-This is my thesis design. I develop a context-aware, event-based anomaly detector (CEAD). CEAD is embedded in Floodlight controller.
+This is my thesis design. I develop a context-aware, event-based anomaly detector (CEAD). CEAD is embedded in Floodlight controller. If you are not familiar with Floodlight, I recommend you to visit its [github](https://github.com/floodlight/floodlight) and [Documents](https://floodlight.atlassian.net/wiki/spaces/floodlightcontroller/overview)
 
 ## Getting Started
 
@@ -23,9 +23,15 @@ sudo apt-get install build-essential ant maven python-dev
 ```
 
 ## Developing Floodlight in Eclipse
-Build Floodlight as a maven project
+Build Floodlight as a maven project.
+Please follow the **Eclipse IDE** paragraph in [this Installation Guide](https://floodlight.atlassian.net/wiki/spaces/floodlightcontroller/pages/1343544/Installation+Guide).
+
+**Caution!!** please replace the General project with Maven project
+~~ant eclipse~~
+```diff
+- ant eclipse
++ mvn eclipse:eclipse
 ```
-mvn eclipse:eclipse
-```
+
 
 ### Usage
