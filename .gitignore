@@ -7,7 +7,8 @@
 .settings
 .DS_Store
 target
-custom
+custom/overhead.log
+custom/results.log
 *.swp
 *.pyc
 findbugs-results
