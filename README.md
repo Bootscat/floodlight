@@ -22,16 +22,20 @@ To download python development package
 sudo apt-get install build-essential ant maven python-dev
 ```
 
+### Usage
+```
+$ java -Dlogback.configurationFile=./logback.xml -jar ./target/floodlight.jar
+```
+
+The above only execute the Floodlight controller, but CEAD is not active by default.
+If you want to use CEAD, you should execute a helper program (follow [this guide](pass)).
+
 ## Developing Floodlight in Eclipse
 Build Floodlight as a maven project.
 Please follow the **Eclipse IDE** paragraph in [this Installation Guide](https://floodlight.atlassian.net/wiki/spaces/floodlightcontroller/pages/1343544/Installation+Guide).
 
 **Caution!!** please replace the General project with Maven project
-~~ant eclipse~~
 ```diff
 - ant eclipse
 + mvn eclipse:eclipse
 ```
-
-
-### Usage
