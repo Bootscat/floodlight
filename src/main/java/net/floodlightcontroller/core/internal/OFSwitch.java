@@ -17,6 +17,8 @@
 
 package net.floodlightcontroller.core.internal;
 
+import cead.TransactionClassifier;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -864,12 +866,13 @@ public class OFSwitch implements IOFSwitchBackend {
 		if (log.isDebugEnabled()) {
 			log.debug("MESSAGES: {}, VALID: {}, INVALID: {}", new Object[] { msgList, validMsgs, invalidMsgs});
 		}
-		/* Try to write all valid messages */
-		Collection<OFMessage> unsent = conn.write(validMsgs);
+		Collection<OFMessage> unsent = Collections.emptyList();
+		boolean shouldBeInstalled = true;
 		for (OFMessage m : validMsgs) {
-			if (!unsent.contains(m)) {
-				switchManager.handleOutgoingMessage(this, m);
-			}
+			shouldBeInstalled = TransactionClassifier.handleFlowMod(this, m);
+		}
+		if(shouldBeInstalled == true) {
+			unsent = conn.write(validMsgs);
 		}
 		
 		/* Collect invalid and unsent messages */

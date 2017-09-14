@@ -144,7 +144,7 @@ public class TransactionClassifier {
 	* @return if this message should be sent to data-plane right now
 	*/
 	public static boolean handleFlowMod(IOFSwitch sw, OFMessage m) {
-		if (start == false) {
+		if (!start) {
 			return true;
 		}
 
