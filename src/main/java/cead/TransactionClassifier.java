@@ -212,7 +212,11 @@ public class TransactionClassifier {
 	}
 
 
-	// return value: false if there is not a flowMod
+
+	/**
+	* When a App complete a transaction, call AnomalyDetector to handle transaction
+	* @return If the App tries to install flow rule
+	*/
 	public static boolean handleTransaction() throws JSONException {
 		if (!start) {
 			return false;
@@ -234,6 +238,12 @@ public class TransactionClassifier {
 		}
 	}
 
+
+
+	/**
+	* Install all the flow rule after anomaly detect
+	* @param tid the transaction ID which is going to be installed
+	*/
 	public static void installTransaction(Long tid) {
 		ArrayList<Entry<IOFSwitch, OFMessage>> list = flowMod.get(tid);
 		if(list != null) {

@@ -18,6 +18,7 @@
 package net.floodlightcontroller.core.internal;
 
 import cead.TransactionClassifier;
+import record.Record;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -407,11 +408,13 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                     Command cmd;
                     for (IOFMessageListener listener : listeners) {
                     	boolean needToBeDetected = false;
+                    	long timeStamp = 0;
                     	if(m.getType().name().equals("PACKET_IN")) {
                     		switch (listener.getClass().getName()) {
                     			case "net.floodlightcontroller.myapp.MyApp":
                     				TransactionClassifier.handlePacketIn(sw, m);
                     				needToBeDetected = true;
+                    				timeStamp = System.nanoTime();
                     				break;
                     		}
                     	}
@@ -420,7 +423,10 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                         cmd = listener.receive(sw, m, bc);
                         if (needToBeDetected) {
                         	try {
-								needToBeDetected = TransactionClassifier.handleTransaction();
+								if (TransactionClassifier.handleTransaction() && TransactionClassifier.start) {
+									Record.recordTime(timeStamp, System.nanoTime());
+								}
+								
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -697,6 +703,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                                            notifiedRole,
                                            INITIAL_ROLE_CHANGE_DESCRIPTION);
         TransactionClassifier.init();
+        Record.recordTime(1, 0);
         // Switch Service Startup
         switchService.registerLogicalOFMessageCategory(LogicalOFMessageCategory.MAIN);
         counters = new ControllerCounters(debugCounterService);
