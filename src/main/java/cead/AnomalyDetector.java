@@ -100,7 +100,7 @@ public class AnomalyDetector {
 	
 	public static boolean violateRoutingPolicies(JSONObject match, DiGraph graph) throws JSONException {
 		for(Entry<String, String> node : graph.getNodes()) {
-			if(!graph.dfs(match, node, log)){
+			if(!graph.dfs(match, node)){
 				return true;
 			}
 		}
