@@ -7,6 +7,7 @@
 .settings
 .DS_Store
 target
+custom
 *.swp
 *.pyc
 findbugs-results
