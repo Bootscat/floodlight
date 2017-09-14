@@ -220,61 +220,61 @@ public abstract class ForwardingBase implements IOFMessageListener {
                 break;			
             }
 
-            OFActionOutput.Builder aob = sw.getOFFactory().actions().buildOutput();
-            List<OFAction> actions = new ArrayList<OFAction>();	
-            Match.Builder mb = MatchUtils.convertToVersion(match, sw.getOFFactory().getVersion());
+//            OFActionOutput.Builder aob = sw.getOFFactory().actions().buildOutput();
+//            List<OFAction> actions = new ArrayList<OFAction>();	
+//            Match.Builder mb = MatchUtils.convertToVersion(match, sw.getOFFactory().getVersion());
 
             // set input and output ports on the switch
             OFPort outPort = switchPortList.get(indx).getPortId();
             OFPort inPort = switchPortList.get(indx - 1).getPortId();
-            if (FLOWMOD_DEFAULT_MATCH_IN_PORT) {
-                mb.setExact(MatchField.IN_PORT, inPort);
-            }
-            aob.setPort(outPort);
-            aob.setMaxLen(Integer.MAX_VALUE);
-            actions.add(aob.build());
-
-            if (FLOWMOD_DEFAULT_SET_SEND_FLOW_REM_FLAG || requestFlowRemovedNotification) {
-                Set<OFFlowModFlags> flags = new HashSet<>();
-                flags.add(OFFlowModFlags.SEND_FLOW_REM);
-                fmb.setFlags(flags);
-            }
-
-            fmb.setMatch(mb.build())
-            .setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
-            .setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-            .setBufferId(OFBufferId.NO_BUFFER)
-            .setCookie(cookie)
-            .setOutPort(outPort)
-            .setPriority(FLOWMOD_DEFAULT_PRIORITY);
-
-            FlowModUtils.setActions(fmb, actions, sw);
-
-            /* Configure for particular switch pipeline */
-            if (sw.getOFFactory().getVersion().compareTo(OFVersion.OF_10) != 0) {
-                fmb.setTableId(FLOWMOD_DEFAULT_TABLE_ID);
-            }
-                        
-            if (log.isTraceEnabled()) {
-                log.trace("Pushing Route flowmod routeIndx={} " +
-                        "sw={} inPort={} outPort={}",
-                        new Object[] {indx,
-                                sw,
-                                fmb.getMatch().get(MatchField.IN_PORT),
-                                outPort });
-            }
-
-            if (OFDPAUtils.isOFDPASwitch(sw)) {
-                OFDPAUtils.addLearningSwitchFlow(sw, cookie, 
-                        FLOWMOD_DEFAULT_PRIORITY, 
-                        FLOWMOD_DEFAULT_HARD_TIMEOUT,
-                        FLOWMOD_DEFAULT_IDLE_TIMEOUT,
-                        fmb.getMatch(), 
-                        null, // TODO how to determine output VLAN for lookup of L2 interface group
-                        outPort);
-            } else {
-                messageDamper.write(sw, fmb.build());
-            }
+//            if (FLOWMOD_DEFAULT_MATCH_IN_PORT) {
+//                mb.setExact(MatchField.IN_PORT, inPort);
+//            }
+//            aob.setPort(outPort);
+//            aob.setMaxLen(Integer.MAX_VALUE);
+//            actions.add(aob.build());
+//
+//            if (FLOWMOD_DEFAULT_SET_SEND_FLOW_REM_FLAG || requestFlowRemovedNotification) {
+//                Set<OFFlowModFlags> flags = new HashSet<>();
+//                flags.add(OFFlowModFlags.SEND_FLOW_REM);
+//                fmb.setFlags(flags);
+//            }
+//
+//            fmb.setMatch(mb.build())
+//            .setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+//            .setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
+//            .setBufferId(OFBufferId.NO_BUFFER)
+//            .setCookie(cookie)
+//            .setOutPort(outPort)
+//            .setPriority(FLOWMOD_DEFAULT_PRIORITY);
+//
+//            FlowModUtils.setActions(fmb, actions, sw);
+//
+//            /* Configure for particular switch pipeline */
+//            if (sw.getOFFactory().getVersion().compareTo(OFVersion.OF_10) != 0) {
+//                fmb.setTableId(FLOWMOD_DEFAULT_TABLE_ID);
+//            }
+//                        
+//            if (log.isTraceEnabled()) {
+//                log.trace("Pushing Route flowmod routeIndx={} " +
+//                        "sw={} inPort={} outPort={}",
+//                        new Object[] {indx,
+//                                sw,
+//                                fmb.getMatch().get(MatchField.IN_PORT),
+//                                outPort });
+//            }
+//
+//            if (OFDPAUtils.isOFDPASwitch(sw)) {
+//                OFDPAUtils.addLearningSwitchFlow(sw, cookie, 
+//                        FLOWMOD_DEFAULT_PRIORITY, 
+//                        FLOWMOD_DEFAULT_HARD_TIMEOUT,
+//                        FLOWMOD_DEFAULT_IDLE_TIMEOUT,
+//                        fmb.getMatch(), 
+//                        null, // TODO how to determine output VLAN for lookup of L2 interface group
+//                        outPort);
+//            } else {
+//                messageDamper.write(sw, fmb.build());
+//            }
 
             /* Push the packet out the first hop switch */
             if (sw.getId().equals(pinSwitch) &&
