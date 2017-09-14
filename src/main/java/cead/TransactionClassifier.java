@@ -164,7 +164,7 @@ public class TransactionClassifier {
 				switch (appName) {
 					case "net.floodlightcontroller.routing.ForwardingBase":
 						break;
-					case "net.floodlightcontroller.myapp.MyApp":
+					case "net.floodlightcontroller.experimentApp.ExperimentApp":
 						Entry<IOFSwitch, OFMessage> tmp = new SimpleEntry<IOFSwitch, OFMessage>(sw, m);
 						ArrayList<Entry<IOFSwitch, OFMessage>> list = flowMod.get(tid);
 						if(list != null){

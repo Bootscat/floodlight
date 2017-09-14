@@ -411,7 +411,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                     	long timeStamp = 0;
                     	if(m.getType().name().equals("PACKET_IN")) {
                     		switch (listener.getClass().getName()) {
-                    			case "net.floodlightcontroller.myapp.MyApp":
+                    			case "net.floodlightcontroller.experimentApp.ExperimentApp":
                     				TransactionClassifier.handlePacketIn(sw, m);
                     				needToBeDetected = true;
                     				timeStamp = System.nanoTime();
