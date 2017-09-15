@@ -157,7 +157,7 @@ public class VeriFlow {
 //				e.printStackTrace();
 //			}
 			sw.write(m);
-			leafNode.ruleSet.clear();
+//			leafNode.ruleSet.clear();
 		} else {
 			sw.write(m);
 			leafNode.ruleSet.add(currentFlow);
