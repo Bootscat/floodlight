@@ -109,19 +109,20 @@ public class VeriFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
 				
-//		// insert existing flow
-//		if(!leafNode.ruleSet.isEmpty()) {
-//			for(RuleObject rule : leafNode.ruleSet) {
-//				try {
-//					addGraph(graph, rule);
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		// insert existing flow
+		if(!leafNode.ruleSet.isEmpty()) {
+			for(RuleObject rule : leafNode.ruleSet) {
+				try {
+					addGraph(graph, rule);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return true;
 //		
 //		for(Entry<String, String> node : graph.getNodes()) {
 //			try {
