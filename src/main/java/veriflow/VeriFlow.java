@@ -133,41 +133,37 @@ public class VeriFlow {
 			}
 		}
 		
+		if(dst != null) {
+			/**
+			* This part are not implemented in related work, so I comment it.
+			* try {
+			*	if(matchObj.has("eth_dst")) {
+			*		if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
+			*			log.error(matchObj.get("eth_dst").toString());
+			*			log.error(dst.getKey());
+			*			log.error("Destination error");
+			*			return false;
+			*		}
+			*	}
+			*	
+			*	if(matchObj.has("ipv4_dst")) {
+			*		if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
+			*			log.error(matchObj.get("ipv4_dst").toString());
+			*			log.error(dst.getValue());
+			*			log.error("Destination error");
+			*			return false;
+			*		}
+			*	}
+			* } catch (JSONException e) {
+			*	// TODO Auto-generated catch block
+			*	e.printStackTrace();
+			* }
+ 			*/
+			leafNode.ruleSet.clear();
+		} else {
+			leafNode.ruleSet.add(currentFlow);
+		}
 		return true;
-//		
-//		if(dst != null) {
-//			/**
-//			* This part are not implemented in related work, so I comment it.
-//			* try {
-//			*	if(matchObj.has("eth_dst")) {
-//			*		if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
-//			*			log.error(matchObj.get("eth_dst").toString());
-//			*			log.error(dst.getKey());
-//			*			log.error("Destination error");
-//			*			return false;
-//			*		}
-//			*	}
-//			*	
-//			*	if(matchObj.has("ipv4_dst")) {
-//			*		if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
-//			*			log.error(matchObj.get("ipv4_dst").toString());
-//			*			log.error(dst.getValue());
-//			*			log.error("Destination error");
-//			*			return false;
-//			*		}
-//			*	}
-//			* } catch (JSONException e) {
-//			*	// TODO Auto-generated catch block
-//			*	e.printStackTrace();
-//			* }
-// 			*/
-//			sw.write(m);
-//			leafNode.ruleSet.clear();
-//		} else {
-//			sw.write(m);
-//			leafNode.ruleSet.add(currentFlow);
-//		}
-//		return false;
 	}
 	
 	
@@ -178,18 +174,15 @@ public class VeriFlow {
 	public static String getMessageSender() {
 		String function;
 		String sender = "";
-//		int cnt = 0;
+
 		for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
 			function = ste.toString().split("\\(")[0];
-//			if(function.equals("veriflow.VeriFlow.handleFlowMod")) {
-//				cnt += 1;
-//			}
+
 			int cutPoint = function.indexOf(".receive");
 			if(cutPoint != -1) {
 				sender = function.substring(0, cutPoint);
 			}
 		}
-//		return cnt > 1 ? "VeriFlow" : sender;
 		return sender;
 	}
 	
