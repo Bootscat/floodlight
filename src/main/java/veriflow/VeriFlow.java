@@ -110,7 +110,6 @@ public class VeriFlow {
 		if(!ruleSet.isEmpty()) {
 			for(RuleObject rule : ruleSet) {
 				if (rule == null) {
-					log.info("Empty rule");
 					continue;
 				}
 				try {
