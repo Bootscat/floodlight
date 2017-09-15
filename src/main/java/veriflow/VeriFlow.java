@@ -109,60 +109,64 @@ public class VeriFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// insert existing flow
-		if(!leafNode.ruleSet.isEmpty()) {
-			for(RuleObject rule : leafNode.ruleSet) {
-				try {
-					addGraph(graph, rule);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		for(Entry<String, String> node : graph.getNodes()) {
-			try {
-				if(!graph.dfs(matchObj, node)){
-					return false;
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		if(dst != null) {
-//			try {
-//				if(matchObj.has("eth_dst")) {
-//					if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
-//						log.error(matchObj.get("eth_dst").toString());
-//						log.error(dst.getKey());
-//						log.error("Destination error");
-//						return false;
-//					}
+		return true;
+				
+//		// insert existing flow
+//		if(!leafNode.ruleSet.isEmpty()) {
+//			for(RuleObject rule : leafNode.ruleSet) {
+//				try {
+//					addGraph(graph, rule);
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
 //				}
-//				
-//				if(matchObj.has("ipv4_dst")) {
-//					if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
-//						log.error(matchObj.get("ipv4_dst").toString());
-//						log.error(dst.getValue());
-//						log.error("Destination error");
-//						return false;
-//					}
+//			}
+//		}
+//		
+//		for(Entry<String, String> node : graph.getNodes()) {
+//			try {
+//				if(!graph.dfs(matchObj, node)){
+//					return false;
 //				}
 //			} catch (JSONException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			sw.write(m);
+//		}
+//		
+//		if(dst != null) {
+//			/**
+//			* This part are not implemented in related work, so I comment it.
+//			* try {
+//			*	if(matchObj.has("eth_dst")) {
+//			*		if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
+//			*			log.error(matchObj.get("eth_dst").toString());
+//			*			log.error(dst.getKey());
+//			*			log.error("Destination error");
+//			*			return false;
+//			*		}
+//			*	}
+//			*	
+//			*	if(matchObj.has("ipv4_dst")) {
+//			*		if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
+//			*			log.error(matchObj.get("ipv4_dst").toString());
+//			*			log.error(dst.getValue());
+//			*			log.error("Destination error");
+//			*			return false;
+//			*		}
+//			*	}
+//			* } catch (JSONException e) {
+//			*	// TODO Auto-generated catch block
+//			*	e.printStackTrace();
+//			* }
+// 			*/
+//			sw.write(m);
 //			leafNode.ruleSet.clear();
-		} else {
-			sw.write(m);
-			leafNode.ruleSet.add(currentFlow);
-		}
-		return false;
+//		} else {
+//			sw.write(m);
+//			leafNode.ruleSet.add(currentFlow);
+//		}
+//		return false;
 	}
 	
 	
