@@ -173,14 +173,18 @@ public class VeriFlow {
 	public static String getMessageSender() {
 		String function;
 		String sender = "";
+		int cnt = 0;
 		for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
 			function = ste.toString().split("\\(")[0];
+			if(function.equals("veriflow.VeriFlow.handleFlowMod")) {
+				cnt += 1;
+			}
 			int cutPoint = function.indexOf(".receive");
 			if(cutPoint != -1) {
 				sender = function.substring(0, cutPoint);
 			}
 		}
-		return sender;
+		return cnt > 1 ? "VeriFlow" : sender;
 	}
 	
 	
