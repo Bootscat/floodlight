@@ -17,7 +17,7 @@
 
 package net.floodlightcontroller.core.internal;
 
-import cead.TransactionClassifier;
+import veriflow.VeriFlow;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -869,7 +869,7 @@ public class OFSwitch implements IOFSwitchBackend {
 		Collection<OFMessage> unsent = Collections.emptyList();
 		boolean shouldBeInstalled = true;
 		for (OFMessage m : validMsgs) {
-			shouldBeInstalled = TransactionClassifier.handleFlowMod(this, m);
+			shouldBeInstalled = VeriFlow.handleFlowMod(this, m);
 		}
 		if(shouldBeInstalled == true) {
 			unsent = conn.write(validMsgs);

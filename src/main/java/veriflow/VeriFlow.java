@@ -144,14 +144,14 @@ public class VeriFlow {
 					}
 				}
 				
-				if(matchObj.has("ipv4_dst")) {
-					if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
-						log.error(matchObj.get("ipv4_dst").toString());
-						log.error(dst.getValue());
-						log.error("Destination error");
-						return false;
-					}
-				}
+//				if(matchObj.has("ipv4_dst")) {
+//					if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
+//						log.error(matchObj.get("ipv4_dst").toString());
+//						log.error(dst.getValue());
+//						log.error("Destination error");
+//						return false;
+//					}
+//				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
