@@ -1,10 +1,6 @@
 package veriflow;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -75,11 +71,11 @@ public class VeriFlow {
 		}
 		
 		String appName = getMessageSender();
-		
 		if(!appName.equals("net.floodlightcontroller.experimentApp.ExperimentApp")) {
 			return true;
 		}
 		
+		// Parse the flow-mod message
 		OFFlowMod fm = (OFFlowMod) m;	
 		JSONObject matchObj = new JSONObject();
 		String in_port = null;
@@ -96,13 +92,13 @@ public class VeriFlow {
 			e.printStackTrace();
 		}
 		
+		// Find the leafNode the flow-mod belongs to in Trie
 		String[] outputs = fm.getOutPort().toString().split(",");
 		RuleObject currentFlow = new RuleObject(sw, in_port , outputs);
-		
 		Node leafNode = flowTrie.insert(matchObj);
-		// build graph
+		
+		// Build the flow graph (directed graph)
 		DiGraph graph = new DiGraph();
-		// insert current flow
 		Entry<String, String> dst = null;
 		try {
 			dst = addGraph(graph, currentFlow);
@@ -110,8 +106,6 @@ public class VeriFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
-		// insert existing flow
 		ArrayList<RuleObject> ruleSet = new ArrayList<>(leafNode.ruleSet);
 		if(!leafNode.ruleSet.isEmpty()) {
 			for(RuleObject rule : ruleSet) {
@@ -124,6 +118,7 @@ public class VeriFlow {
 			}
 		}
 		
+		// Detect loop in flow graph
 		for(Entry<String, String> node : graph.getNodes()) {
 			try {
 				if(!graph.dfs(matchObj, node)){
@@ -162,10 +157,8 @@ public class VeriFlow {
 			* }
  			*/
 			leafNode.ruleSet.clear();
-			log.info("Rule set clear");
 		} else {
 			leafNode.ruleSet.add(currentFlow);
-			log.info("Rule set append");
 		}
 		return true;
 	}
