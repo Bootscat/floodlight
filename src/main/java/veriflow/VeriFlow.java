@@ -3,7 +3,9 @@ package veriflow;
 import java.net.URISyntaxException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +27,7 @@ public class VeriFlow {
 	public static JSONObject topology = null;
 	protected static final Logger log = LoggerFactory.getLogger("VeriFlow");
 	public static boolean start = false;
+	public static Set<Long> effectiveTid = new HashSet<>();
 	
 	public static void init() {
 		if(socket != null) {
@@ -74,6 +77,9 @@ public class VeriFlow {
 		if(!appName.equals("net.floodlightcontroller.experimentApp.ExperimentApp")) {
 			return true;
 		}
+		
+		Long tid = Thread.currentThread().getId();
+		effectiveTid.add(tid);
 		
 		// Parse the flow-mod message
 		OFFlowMod fm = (OFFlowMod) m;	

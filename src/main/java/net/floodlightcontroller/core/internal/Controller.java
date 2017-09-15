@@ -406,6 +406,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                     pktinProcTimeService.bootstrap(listeners);
                     pktinProcTimeService.recordStartTimePktIn();
                     Command cmd;
+                    Long tid = Thread.currentThread().getId();
                     for (IOFMessageListener listener : listeners) {
                     	boolean needToBeDetected = false;
                     	long timeStamp = 0;
@@ -421,8 +422,9 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                         pktinProcTimeService.recordStartTimeComp(listener);
                         cmd = listener.receive(sw, m, bc);
                         if (needToBeDetected) {
-							if (VeriFlow.start) {
+							if (VeriFlow.start && VeriFlow.effectiveTid.contains(tid)) {
 								Record.recordTime(timeStamp, System.nanoTime());
+								VeriFlow.effectiveTid.remove(tid);
 							}
                         }
                         pktinProcTimeService.recordEndTimeComp(listener);
