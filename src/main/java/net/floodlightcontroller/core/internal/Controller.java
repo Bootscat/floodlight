@@ -17,7 +17,7 @@
 
 package net.floodlightcontroller.core.internal;
 
-import cead.TransactionClassifier;
+import veriflow.VeriFlow;
 import record.Record;
 
 import java.io.IOException;
@@ -412,7 +412,6 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                     	if(m.getType().name().equals("PACKET_IN")) {
                     		switch (listener.getClass().getName()) {
                     			case "net.floodlightcontroller.experimentApp.ExperimentApp":
-                    				TransactionClassifier.handlePacketIn(sw, m);
                     				needToBeDetected = true;
                     				timeStamp = System.nanoTime();
                     				break;
@@ -422,14 +421,8 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
                         pktinProcTimeService.recordStartTimeComp(listener);
                         cmd = listener.receive(sw, m, bc);
                         if (needToBeDetected) {
-                        	try {
-								if (TransactionClassifier.handleTransaction() && TransactionClassifier.start) {
-									Record.recordTime(timeStamp, System.nanoTime());
-								}
-								
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							if (VeriFlow.start) {
+								Record.recordTime(timeStamp, System.nanoTime());
 							}
                         }
                         pktinProcTimeService.recordEndTimeComp(listener);
@@ -702,7 +695,7 @@ public class Controller implements IFloodlightProviderService, IStorageSourceLis
         roleManager = new RoleManager(this, shutdownService,
                                            notifiedRole,
                                            INITIAL_ROLE_CHANGE_DESCRIPTION);
-        TransactionClassifier.init();
+        VeriFlow.init();
         Record.recordTime(1, 0);
         // Switch Service Startup
         switchService.registerLogicalOFMessageCategory(LogicalOFMessageCategory.MAIN);
