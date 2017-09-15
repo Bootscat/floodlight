@@ -134,16 +134,16 @@ public class VeriFlow {
 		}
 		
 		if(dst != null) {
-			try {
-				if(matchObj.has("eth_dst")) {
-					if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
-						log.error(matchObj.get("eth_dst").toString());
-						log.error(dst.getKey());
-						log.error("Destination error");
-						return false;
-					}
-				}
-				
+//			try {
+//				if(matchObj.has("eth_dst")) {
+//					if(!matchObj.get("eth_dst").toString().equals(dst.getKey())) {
+//						log.error(matchObj.get("eth_dst").toString());
+//						log.error(dst.getKey());
+//						log.error("Destination error");
+//						return false;
+//					}
+//				}
+//				
 //				if(matchObj.has("ipv4_dst")) {
 //					if(!matchObj.get("ipv4_dst").toString().equals(dst.getValue())) {
 //						log.error(matchObj.get("ipv4_dst").toString());
@@ -152,10 +152,10 @@ public class VeriFlow {
 //						return false;
 //					}
 //				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			sw.write(m);
 			leafNode.ruleSet.clear();
 		} else {
