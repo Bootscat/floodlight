@@ -107,8 +107,12 @@ public class VeriFlow {
 			e.printStackTrace();
 		}
 		ArrayList<RuleObject> ruleSet = new ArrayList<>(leafNode.ruleSet);
-		if(!leafNode.ruleSet.isEmpty()) {
+		if(!ruleSet.isEmpty()) {
 			for(RuleObject rule : ruleSet) {
+				if (rule == null) {
+					log.info("Empty rule");
+					continue;
+				}
 				try {
 					addGraph(graph, rule);
 				} catch (JSONException e) {
