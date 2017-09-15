@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.json.JSONArray;
@@ -111,8 +112,9 @@ public class VeriFlow {
 		}
 				
 		// insert existing flow
+		ArrayList<RuleObject> ruleSet = new ArrayList<>(leafNode.ruleSet);
 		if(!leafNode.ruleSet.isEmpty()) {
-			for(RuleObject rule : leafNode.ruleSet) {
+			for(RuleObject rule : ruleSet) {
 				try {
 					addGraph(graph, rule);
 				} catch (JSONException e) {
@@ -160,8 +162,10 @@ public class VeriFlow {
 			* }
  			*/
 			leafNode.ruleSet.clear();
+			log.info("Rule set clear");
 		} else {
 			leafNode.ruleSet.add(currentFlow);
+			log.info("Rule set append");
 		}
 		return true;
 	}
